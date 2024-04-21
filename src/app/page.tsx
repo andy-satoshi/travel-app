@@ -1,95 +1,73 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { Table } from "@/components/table";
+import React, { useMemo, useState } from "react";
+import { ExpenseInput, TravelExpenseContext } from "@/context/travel-expense";
+import { TotalCard } from "@/components/total-card";
+
+const mockContents = [
+  {
+    id: 0,
+    description: "Hotel",
+    cost: 100,
+    currency: "SGD",
+  },
+  {
+    id: 1,
+    description: "Food",
+    cost: 20,
+    currency: "SGD",
+  },
+];
 
 export default function Home() {
+  const [contents, setContents] = useState(mockContents);
+  const addExpense = (expense: ExpenseInput) => {
+    setContents((state) => {
+      return state.concat({
+        id: state.length,
+        description: expense.description,
+        cost: Number(expense.cost),
+        currency: expense.currency,
+      });
+    });
+  };
+
+  const deleteExpense = (id: number): void => {
+    setContents((state) => {
+      return state.filter((item) => item.id !== id);
+    });
+  };
+
+  const updateExpense = (id: number, expense: ExpenseInput): void => {
+    setContents((state) => {
+      return state.map((item) =>
+        item.id === id
+          ? { ...expense, id: id, cost: Number(expense.cost) }
+          : item,
+      );
+    });
+  };
+
+  const totalAmount = useMemo(() => {
+    return contents.reduce((value, content) => {
+      return content.cost + value;
+    }, 0);
+  }, [contents]);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <TravelExpenseContext.Provider
+      value={{ updateExpense, addExpense, deleteExpense }}
+    >
+      <div className="grid grid-flow-row-dense grid-cols-4">
+        <div className="pr-4 col-span-3">
+          <Table contents={contents} />
+        </div>
+        <div className="col-span-1">
+          <div className="flex justify-end">
+            <TotalCard amount={totalAmount} currency={"SGD"} />
+          </div>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </TravelExpenseContext.Provider>
   );
 }
