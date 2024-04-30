@@ -3,6 +3,7 @@ import { Table } from "@/components/table";
 import React, { useMemo, useState } from "react";
 import { ExpenseInput, TravelExpenseContext } from "@/context/travel-expense";
 import { TotalCard } from "@/components/total-card";
+import { Dropdown } from "@/components/element/dropdown";
 
 const mockContents = [
   {
