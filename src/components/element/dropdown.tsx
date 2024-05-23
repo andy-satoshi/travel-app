@@ -1,26 +1,30 @@
 import { on } from "next/dist/client/components/react-dev-overlay/pages/bus";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
+import { Button } from "@chakra-ui/button";
 
 export const Dropdown = ({ selected, list, onSelect }: Props) => {
-  return (
-    <details className="dropdown">
-      <summary className="m-1 btn">Selected currency: {selected}</summary>
-      <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-        {list.map((item, i) => (
-          <li key={`dd-key${i}`}>
-            <a
+  const render = () => {
+    return (
+      <Menu>
+        <MenuButton as={Button}>Selected currency: {selected}</MenuButton>
+        <MenuList>
+          {list.map((item, i) => (
+            <MenuItem
+              key={`dd-key${i}`}
               onClick={() => {
                 if (onSelect) {
                   onSelect(item);
                 }
               }}
             >
-              {item}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </details>
-  );
+              <a>{item}</a>
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
+    );
+  };
+  return render();
 };
 
 type Props = StateProps & DispatchProps;

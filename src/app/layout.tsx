@@ -3,6 +3,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "tailwindcss/tailwind.css";
 import "./globals.css";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "../../theme";
+import { Providers } from "@/app/providers";
+import { TravelExpenseContextProvider } from "@/context/travel-expense";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +29,11 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <div className="container mx-auto">{children}</div>
+        <Providers>
+          <TravelExpenseContextProvider>
+            <div className="container mx-auto">{children}</div>
+          </TravelExpenseContextProvider>
+        </Providers>
       </body>
     </html>
   );
