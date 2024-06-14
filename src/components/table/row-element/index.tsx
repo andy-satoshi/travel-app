@@ -43,7 +43,7 @@ export const ContentRow = ({ content }: Props) => {
       <td>{description}</td>
       <td>
         <div className="grid grid-cols-2 place-content-end">
-          <div>{`${cost} ${currency}`}</div>
+          <div>{`${cost?.toLocaleString()} ${currency}`}</div>
           {iconVisible && (
             <div className="text-end">
               <i

@@ -6,7 +6,9 @@ export const TotalCard = ({ amount, currency }: Props) => {
       <div className="card-body card-bordered">
         <h2 className="card-title">Total</h2>
         <div className="text-right">
-          <p className="text-5xl font-extrabold text-sky-400 pb-1">{amount}</p>
+          <p className="text-5xl font-extrabold text-sky-400 pb-1">
+            {amount?.toLocaleString()}
+          </p>
           <p className="text-xl">{currency}</p>
         </div>
       </div>
